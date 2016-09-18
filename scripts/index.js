@@ -1,5 +1,5 @@
 const people = [];
-const peoplePerPage = 100;
+const peoplePerPage = 500;
 let alreadyOnPage = 0;
 
 const listEl = document.getElementById('people-list');
@@ -27,7 +27,7 @@ function loadNextPage() {
 }
 
 function scrollHandler() {
-    const threshold = 100;
+    const threshold = 500;
     const body = document.body;
     const isApproachingTheBottom = body.scrollHeight <= body.scrollTop + window.innerHeight + threshold;
 
@@ -46,7 +46,7 @@ function parseCSVLines(newLines) {
 
     statusEl.innerHTML = `loading... <br> ${people.length}`;
 
-    const needsToRenderInitialPage = alreadyOnPage < 100 && people.length >= 100;
+    const needsToRenderInitialPage = alreadyOnPage < peoplePerPage && people.length >= peoplePerPage;
     if (needsToRenderInitialPage) {
         loadNextPage();
     }
