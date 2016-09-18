@@ -1,10 +1,12 @@
 const people = [];
 const peoplePerPage = 500;
+const peopleTotal = 500000;
 let alreadyOnPage = 0;
 
 const listEl = document.getElementById('people-list');
 const paginationEl = document.getElementById('people-pagination');
 const statusEl = document.getElementById('load-status');
+const progressBarEl = document.getElementById('progress-bar');
 let renders = 0;
 
 function loadNextPage() {
@@ -46,6 +48,8 @@ function parseCSVLines(newLines) {
     });
 
     statusEl.innerHTML = `loading... <br> ${people.length}`;
+    const loadPercent = people.length / peopleTotal * 100;
+    progressBarEl.style.width = String(loadPercent) + '%';
 
     const needsToRenderInitialPage = alreadyOnPage < peoplePerPage && people.length >= peoplePerPage;
     if (needsToRenderInitialPage) {

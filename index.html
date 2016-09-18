@@ -12,9 +12,20 @@
         float: left;
         margin-bottom: 500px;
     }
+    .progress-bar-wrapper {
+        border-bottom: #4285f4 2px solid;
+        width: 500px;
+    }
+    #progress-bar {
+        background: #4285f4;
+        border-bottom: #4285f4 2px solid;
+        height: 10px;
+        width: 1px;
+    }
 </style>
 
-<div id="load-status">loading...</div>
+<div id="load-status">loading...<br>&nbsp</div>
+<div class="progress-bar-wrapper"><div id="progress-bar"></div></div>
 <br>
 <table id="people-list"></table>
 
