@@ -27,7 +27,8 @@ function loadNextPage() {
 }
 
 function scrollHandler() {
-    const threshold = 500;
+    const bottomMargin = 500;
+    const threshold = window.innerHeight + bottomMargin;
     const body = document.body;
     const isApproachingTheBottom = body.scrollHeight <= body.scrollTop + window.innerHeight + threshold;
 
