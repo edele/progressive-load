@@ -4,28 +4,40 @@
 <title>huge people list</title>
 
 <style>
+    :root {
+      --blue: #4285f4;
+    }
+
     html {
         font: 10px sans-serif;
     }
+
     #people-list {
         width: 500px;
         float: left;
         margin-bottom: 500px;
     }
+
     .progress-bar-wrapper {
-        border-bottom: #4285f4 2px solid;
+        border-bottom: var(--blue) 2px solid;
         width: 500px;
     }
+
     #progress-bar {
-        background: #4285f4;
-        border-bottom: #4285f4 2px solid;
-        height: 10px;
+        box-sizing: border-box;
+        background: var(--blue);
+        border-bottom: var(--blue) 2px solid;
         width: 1px;
+        white-space: nowrap;
+        padding: 2px 4px 0;
+        color: #fff;
+        text-shadow: 0 0 2px var(--blue);
     }
 </style>
 
-<div id="load-status">loading...<br>&nbsp;</div>
-<div class="progress-bar-wrapper"><div id="progress-bar"></div></div>
+<div class="progress-bar-wrapper">
+    <div id="progress-bar">loading...</div>
+</div>
 <br>
 <table id="people-list"></table>
 

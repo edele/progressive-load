@@ -5,7 +5,6 @@ let alreadyOnPage = 0;
 
 const listEl = document.getElementById('people-list');
 const paginationEl = document.getElementById('people-pagination');
-const statusEl = document.getElementById('load-status');
 const progressBarEl = document.getElementById('progress-bar');
 let renders = 0;
 
@@ -47,7 +46,7 @@ function parseCSVLines(newLines) {
         linesCount++;
     });
 
-    statusEl.innerHTML = `loading... <br> ${people.length}`;
+    progressBarEl.innerHTML = `loading... ${people.length} records from csv file`;
     const loadPercent = people.length / peopleTotal * 100;
     progressBarEl.style.width = String(loadPercent) + '%';
 
@@ -80,7 +79,7 @@ fetch('/people.csv').then(response => {
             parseCSVLines(completeLines);
 
             if (result.done) {
-                statusEl.innerHTML = `done! <br> ${people.length}`;
+                progressBarEl.innerHTML = `done loading ${people.length} records from csv file`;
                 return;
             }
 
