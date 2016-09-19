@@ -1,44 +1,40 @@
+import peopleRepository from './peopleRepository'
+
+peopleRepository.onChunkReceived = parseCSVLines;
+
+peopleRepository.onDoneReceiving = lines => {
+    progressBarEl.innerHTML = `done loading ${lines.length} records from csv file`;
+}
+
+peopleRepository.fetch();
+
 const people = [];
 const peoplePerPage = 500;
 const peopleTotal = 500000;
 let alreadyOnPage = 0;
 
 const listEl = document.getElementById('people-list');
-const paginationEl = document.getElementById('people-pagination');
-const progressBarEl = document.getElementById('progress-bar');
-let renders = 0;
-
 function loadNextPage() {
-    const needsToLoadNextPage = alreadyOnPage < people.length;
+    const hasRecordsToRender = alreadyOnPage < people.length;
 
-    if (needsToLoadNextPage) {
-        const pageHtml = people.slice(alreadyOnPage, alreadyOnPage + peoplePerPage).map(person => {
-            return `<tr>
-                <td>${person.number}</td>
-                <td>${person.name}</td>
-                <td>${person.address}</td>
-                <td>${person.phone}</td>
-            </tr>`;
-        }).join('');
+    if (!hasRecordsToRender) return;
 
-        listEl.insertAdjacentHTML('beforeend', pageHtml);
+    const pageHtml = people.slice(alreadyOnPage, alreadyOnPage + peoplePerPage).map(person => {
+        return `<tr>
+            <td>${person.number}</td>
+            <td>${person.name}</td>
+            <td>${person.address}</td>
+            <td>${person.phone}</td>
+        </tr>`;
+    }).join('');
 
-        alreadyOnPage += peoplePerPage;
-    }
-}
+    listEl.insertAdjacentHTML('beforeend', pageHtml);
 
-function scrollHandler() {
-    const bottomMargin = 500;
-    const threshold = window.innerHeight + bottomMargin;
-    const body = document.body;
-    const isApproachingTheBottom = body.scrollHeight <= body.scrollTop + window.innerHeight + threshold;
-
-    if (isApproachingTheBottom) {
-        loadNextPage();
-    }
+    alreadyOnPage += peoplePerPage;
 }
 
 let linesCount = 0;
+const progressBarEl = document.getElementById('progress-bar');
 function parseCSVLines(newLines) {
     newLines.forEach(line => {
         const [ name, address, phone ] = line.split(',');
@@ -56,38 +52,13 @@ function parseCSVLines(newLines) {
     }
 }
 
-document.onscroll = scrollHandler;
+document.onscroll = () => {
+    const bottomMargin = 500;
+    const threshold = window.innerHeight + bottomMargin;
+    const body = document.body;
+    const isApproachingTheBottom = body.scrollHeight <= body.scrollTop + window.innerHeight + threshold;
 
-fetch('/people.csv').then(response => {
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let partialLine = '';
-
-    function readChunk() {
-        return reader.read().then(result => {
-            partialLine += decoder.decode(result.value || new Uint8Array, {
-                stream: !result.done
-            });
-
-            let completeLines = partialLine.split("\n");
-
-            if (!result.done) {
-                partialLine = completeLines[completeLines.length - 1];
-                completeLines = completeLines.slice(0, -1);
-            }
-
-            parseCSVLines(completeLines);
-
-            if (result.done) {
-                progressBarEl.innerHTML = `done loading ${people.length} records from csv file`;
-                return;
-            }
-
-            return readChunk();
-        })
+    if (isApproachingTheBottom) {
+        loadNextPage();
     }
-
-    return readChunk();
-}).catch(err => {
-    alert(err.message);
-});
+}
